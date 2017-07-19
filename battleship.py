@@ -1,35 +1,178 @@
 
 
-def can_fit(max_ship_size, board_size, board):
+def calc_cell_score(left, right):
 
-    # Check horizontal orientation
-    for current_row in range(board_size):
+    score = 0
 
-        for start_column in range(board_size - max_ship_size + 1):
+    score += calc_ship_score(2, left, right)
+    score += calc_ship_score(2, left, right)
+    score += calc_ship_score(3, left, right)
+    score += calc_ship_score(4, left, right)
+    score += calc_ship_score(5, left, right)
 
-            ship_fits = True
-            end_column = start_column + max_ship_size - 1
+    return score
 
-            for current_column in range(start_column, end_column):
-                if board[current_row][current_column] == '-':
-                    ship_fits = False
 
-            if ship_fits:
-                return (start_column, current_row)
+def calc_ship_score(ship_size, left, right):
 
-    # Check vertical orientation
-    for current_column in range(board_size):
+    open_cells = left + 1 + right
 
-        for start_row in range(board_size - max_ship_size + 1):
+    score = open_cells - ship_size + 1
 
-            ship_fits = True
-            end_row = start_row + max_ship_size - 1
+    # Score cannot be larger than (the minimum of left or right) plus 1
+    if score > min(left, right) + 1:
+        score = min(left, right) + 1
 
-            for current_row in range(start_row, end_row):
-                if board[current_row][current_column] == '-':
-                    ship_fits = False
+    # Score cannot be larger than the ship_size
+    if score > ship_size:
+        score = ship_size
 
-            if ship_fits:
-                return (current_column, start_row)
+    # Score is zero if the ship doesn't fit
+    if ship_size == open_cells:
+        score = 1
+
+    # Score is zero if the ship doesn't fit
+    if ship_size > open_cells:
+        score = 0
+
+    return score
+
+
+print(calc_cell_score(0, 0))
+print(calc_cell_score(0, 1))
+print(calc_cell_score(0, 2))
+print(calc_cell_score(0, 3))
+print(calc_cell_score(0, 4))
+print(calc_cell_score(1, 0))
+print(calc_cell_score(1, 1))
+print(calc_cell_score(1, 2))
+print(calc_cell_score(1, 3))
+print(calc_cell_score(1, 4))
+print(calc_cell_score(2, 0))
+print(calc_cell_score(2, 1))
+print(calc_cell_score(2, 2))
+print(calc_cell_score(2, 3))
+print(calc_cell_score(2, 4))
+print(calc_cell_score(3, 0))
+print(calc_cell_score(3, 1))
+print(calc_cell_score(3, 2))
+print(calc_cell_score(3, 3))
+print(calc_cell_score(3, 4))
+print(calc_cell_score(4, 0))
+print(calc_cell_score(4, 1))
+print(calc_cell_score(4, 2))
+print(calc_cell_score(4, 3))
+print(calc_cell_score(4, 4))
+
+"""
+print('Fives')
+print(calc_ship_score(5, 0, 0))
+print(calc_ship_score(5, 0, 1))
+print(calc_ship_score(5, 0, 2))
+print(calc_ship_score(5, 0, 3))
+print(calc_ship_score(5, 0, 4))
+print(calc_ship_score(5, 1, 0))
+print(calc_ship_score(5, 1, 1))
+print(calc_ship_score(5, 1, 2))
+print(calc_ship_score(5, 1, 3))
+print(calc_ship_score(5, 1, 4))
+print(calc_ship_score(5, 2, 0))
+print(calc_ship_score(5, 2, 1))
+print(calc_ship_score(5, 2, 2))
+print(calc_ship_score(5, 2, 3))
+print(calc_ship_score(5, 2, 4))
+print(calc_ship_score(5, 3, 0))
+print(calc_ship_score(5, 3, 1))
+print(calc_ship_score(5, 3, 2))
+print(calc_ship_score(5, 3, 3))
+print(calc_ship_score(5, 3, 4))
+print(calc_ship_score(5, 4, 0))
+print(calc_ship_score(5, 4, 1))
+print(calc_ship_score(5, 4, 2))
+print(calc_ship_score(5, 4, 3))
+print(calc_ship_score(5, 4, 4))
+
+print('Fours')
+print(calc_ship_score(4, 0, 0))
+print(calc_ship_score(4, 0, 1))
+print(calc_ship_score(4, 0, 2))
+print(calc_ship_score(4, 0, 3))
+print(calc_ship_score(4, 0, 4))
+print(calc_ship_score(4, 1, 0))
+print(calc_ship_score(4, 1, 1))
+print(calc_ship_score(4, 1, 2))
+print(calc_ship_score(4, 1, 3))
+print(calc_ship_score(4, 1, 4))
+print(calc_ship_score(4, 2, 0))
+print(calc_ship_score(4, 2, 1))
+print(calc_ship_score(4, 2, 2))
+print(calc_ship_score(4, 2, 3))
+print(calc_ship_score(4, 2, 4))
+print(calc_ship_score(4, 3, 0))
+print(calc_ship_score(4, 3, 1))
+print(calc_ship_score(4, 3, 2))
+print(calc_ship_score(4, 3, 3))
+print(calc_ship_score(4, 3, 4))
+print(calc_ship_score(4, 4, 0))
+print(calc_ship_score(4, 4, 1))
+print(calc_ship_score(4, 4, 2))
+print(calc_ship_score(4, 4, 3))
+print(calc_ship_score(4, 4, 4))
+
+print('Threes')
+print(calc_ship_score(3, 0, 0))
+print(calc_ship_score(3, 0, 1))
+print(calc_ship_score(3, 0, 2))
+print(calc_ship_score(3, 0, 3))
+print(calc_ship_score(3, 0, 4))
+print(calc_ship_score(3, 1, 0))
+print(calc_ship_score(3, 1, 1))
+print(calc_ship_score(3, 1, 2))
+print(calc_ship_score(3, 1, 3))
+print(calc_ship_score(3, 1, 4))
+print(calc_ship_score(3, 2, 0))
+print(calc_ship_score(3, 2, 1))
+print(calc_ship_score(3, 2, 2))
+print(calc_ship_score(3, 2, 3))
+print(calc_ship_score(3, 2, 4))
+print(calc_ship_score(3, 3, 0))
+print(calc_ship_score(3, 3, 1))
+print(calc_ship_score(3, 3, 2))
+print(calc_ship_score(3, 3, 3))
+print(calc_ship_score(3, 3, 4))
+print(calc_ship_score(3, 4, 0))
+print(calc_ship_score(3, 4, 1))
+print(calc_ship_score(3, 4, 2))
+print(calc_ship_score(3, 4, 3))
+print(calc_ship_score(3, 4, 4))
+
+print('Twos')
+print(calc_ship_score(2, 0, 0))
+print(calc_ship_score(2, 0, 1))
+print(calc_ship_score(2, 0, 2))
+print(calc_ship_score(2, 0, 3))
+print(calc_ship_score(2, 0, 4))
+print(calc_ship_score(2, 1, 0))
+print(calc_ship_score(2, 1, 1))
+print(calc_ship_score(2, 1, 2))
+print(calc_ship_score(2, 1, 3))
+print(calc_ship_score(2, 1, 4))
+print(calc_ship_score(2, 2, 0))
+print(calc_ship_score(2, 2, 1))
+print(calc_ship_score(2, 2, 2))
+print(calc_ship_score(2, 2, 3))
+print(calc_ship_score(2, 2, 4))
+print(calc_ship_score(2, 3, 0))
+print(calc_ship_score(2, 3, 1))
+print(calc_ship_score(2, 3, 2))
+print(calc_ship_score(2, 3, 3))
+print(calc_ship_score(2, 3, 4))
+print(calc_ship_score(2, 4, 0))
+print(calc_ship_score(2, 4, 1))
+print(calc_ship_score(2, 4, 2))
+print(calc_ship_score(2, 4, 3))
+print(calc_ship_score(2, 4, 4))
+"""
+
 
 
