@@ -1,178 +1,66 @@
+from string import ascii_uppercase
 
 
-def calc_cell_score(left, right):
+class GameBoard:
 
-    score = 0
+    def __init__(self, size=10):
+        self.size = size
+        self.grid = [['W' for _ in range(self.size)] for _ in range(self.size)]
 
-    score += calc_ship_score(2, left, right)
-    score += calc_ship_score(2, left, right)
-    score += calc_ship_score(3, left, right)
-    score += calc_ship_score(4, left, right)
-    score += calc_ship_score(5, left, right)
+    def print_board(self):
+        print(' ', end='')
+        for i in range(1, 11):
+            print(' ', i, end='')
+        print()
+        for i, row in enumerate(self.grid):
+            print(ascii_uppercase[i], end='')
+            for cell in row:
+                print(' ', cell, end='')
+            print()
 
-    return score
-
-
-def calc_ship_score(ship_size, left, right):
-
-    open_cells = left + 1 + right
-
-    score = open_cells - ship_size + 1
-
-    # Score cannot be larger than (the minimum of left or right) plus 1
-    if score > min(left, right) + 1:
-        score = min(left, right) + 1
-
-    # Score cannot be larger than the ship_size
-    if score > ship_size:
-        score = ship_size
-
-    # Score is zero if the ship doesn't fit
-    if ship_size == open_cells:
-        score = 1
-
-    # Score is zero if the ship doesn't fit
-    if ship_size > open_cells:
-        score = 0
-
-    return score
+    def place_ship(self, start, end):
+        pass
 
 
-print(calc_cell_score(0, 0))
-print(calc_cell_score(0, 1))
-print(calc_cell_score(0, 2))
-print(calc_cell_score(0, 3))
-print(calc_cell_score(0, 4))
-print(calc_cell_score(1, 0))
-print(calc_cell_score(1, 1))
-print(calc_cell_score(1, 2))
-print(calc_cell_score(1, 3))
-print(calc_cell_score(1, 4))
-print(calc_cell_score(2, 0))
-print(calc_cell_score(2, 1))
-print(calc_cell_score(2, 2))
-print(calc_cell_score(2, 3))
-print(calc_cell_score(2, 4))
-print(calc_cell_score(3, 0))
-print(calc_cell_score(3, 1))
-print(calc_cell_score(3, 2))
-print(calc_cell_score(3, 3))
-print(calc_cell_score(3, 4))
-print(calc_cell_score(4, 0))
-print(calc_cell_score(4, 1))
-print(calc_cell_score(4, 2))
-print(calc_cell_score(4, 3))
-print(calc_cell_score(4, 4))
+class Ship:
 
-"""
-print('Fives')
-print(calc_ship_score(5, 0, 0))
-print(calc_ship_score(5, 0, 1))
-print(calc_ship_score(5, 0, 2))
-print(calc_ship_score(5, 0, 3))
-print(calc_ship_score(5, 0, 4))
-print(calc_ship_score(5, 1, 0))
-print(calc_ship_score(5, 1, 1))
-print(calc_ship_score(5, 1, 2))
-print(calc_ship_score(5, 1, 3))
-print(calc_ship_score(5, 1, 4))
-print(calc_ship_score(5, 2, 0))
-print(calc_ship_score(5, 2, 1))
-print(calc_ship_score(5, 2, 2))
-print(calc_ship_score(5, 2, 3))
-print(calc_ship_score(5, 2, 4))
-print(calc_ship_score(5, 3, 0))
-print(calc_ship_score(5, 3, 1))
-print(calc_ship_score(5, 3, 2))
-print(calc_ship_score(5, 3, 3))
-print(calc_ship_score(5, 3, 4))
-print(calc_ship_score(5, 4, 0))
-print(calc_ship_score(5, 4, 1))
-print(calc_ship_score(5, 4, 2))
-print(calc_ship_score(5, 4, 3))
-print(calc_ship_score(5, 4, 4))
+    def __init__(self, size, x1, y1, orientation):
+        self.size = size
+        self.x1 = x1
+        self.y1 = y1
+        self.orientation = orientation
+        self.coordinates = []
+        self.calculate_coordinates()
 
-print('Fours')
-print(calc_ship_score(4, 0, 0))
-print(calc_ship_score(4, 0, 1))
-print(calc_ship_score(4, 0, 2))
-print(calc_ship_score(4, 0, 3))
-print(calc_ship_score(4, 0, 4))
-print(calc_ship_score(4, 1, 0))
-print(calc_ship_score(4, 1, 1))
-print(calc_ship_score(4, 1, 2))
-print(calc_ship_score(4, 1, 3))
-print(calc_ship_score(4, 1, 4))
-print(calc_ship_score(4, 2, 0))
-print(calc_ship_score(4, 2, 1))
-print(calc_ship_score(4, 2, 2))
-print(calc_ship_score(4, 2, 3))
-print(calc_ship_score(4, 2, 4))
-print(calc_ship_score(4, 3, 0))
-print(calc_ship_score(4, 3, 1))
-print(calc_ship_score(4, 3, 2))
-print(calc_ship_score(4, 3, 3))
-print(calc_ship_score(4, 3, 4))
-print(calc_ship_score(4, 4, 0))
-print(calc_ship_score(4, 4, 1))
-print(calc_ship_score(4, 4, 2))
-print(calc_ship_score(4, 4, 3))
-print(calc_ship_score(4, 4, 4))
+    def calculate_coordinates(self):
+        if self.orientation == 'H':
+            for x in range(self.x1, self.x1+self.size):
+                self.coordinates.append([x, self.y1])
+        elif self.orientation == 'V':
+            for y in range(self.y1, self.y1+self.size):
+                self.coordinates.append([self.x1, y])
 
-print('Threes')
-print(calc_ship_score(3, 0, 0))
-print(calc_ship_score(3, 0, 1))
-print(calc_ship_score(3, 0, 2))
-print(calc_ship_score(3, 0, 3))
-print(calc_ship_score(3, 0, 4))
-print(calc_ship_score(3, 1, 0))
-print(calc_ship_score(3, 1, 1))
-print(calc_ship_score(3, 1, 2))
-print(calc_ship_score(3, 1, 3))
-print(calc_ship_score(3, 1, 4))
-print(calc_ship_score(3, 2, 0))
-print(calc_ship_score(3, 2, 1))
-print(calc_ship_score(3, 2, 2))
-print(calc_ship_score(3, 2, 3))
-print(calc_ship_score(3, 2, 4))
-print(calc_ship_score(3, 3, 0))
-print(calc_ship_score(3, 3, 1))
-print(calc_ship_score(3, 3, 2))
-print(calc_ship_score(3, 3, 3))
-print(calc_ship_score(3, 3, 4))
-print(calc_ship_score(3, 4, 0))
-print(calc_ship_score(3, 4, 1))
-print(calc_ship_score(3, 4, 2))
-print(calc_ship_score(3, 4, 3))
-print(calc_ship_score(3, 4, 4))
 
-print('Twos')
-print(calc_ship_score(2, 0, 0))
-print(calc_ship_score(2, 0, 1))
-print(calc_ship_score(2, 0, 2))
-print(calc_ship_score(2, 0, 3))
-print(calc_ship_score(2, 0, 4))
-print(calc_ship_score(2, 1, 0))
-print(calc_ship_score(2, 1, 1))
-print(calc_ship_score(2, 1, 2))
-print(calc_ship_score(2, 1, 3))
-print(calc_ship_score(2, 1, 4))
-print(calc_ship_score(2, 2, 0))
-print(calc_ship_score(2, 2, 1))
-print(calc_ship_score(2, 2, 2))
-print(calc_ship_score(2, 2, 3))
-print(calc_ship_score(2, 2, 4))
-print(calc_ship_score(2, 3, 0))
-print(calc_ship_score(2, 3, 1))
-print(calc_ship_score(2, 3, 2))
-print(calc_ship_score(2, 3, 3))
-print(calc_ship_score(2, 3, 4))
-print(calc_ship_score(2, 4, 0))
-print(calc_ship_score(2, 4, 1))
-print(calc_ship_score(2, 4, 2))
-print(calc_ship_score(2, 4, 3))
-print(calc_ship_score(2, 4, 4))
-"""
+class Fleet:
 
+    def __init__(self, ships):
+        self.size = len(ships)
+        self.ships = ships
+
+
+if __name__ == '__main__':
+
+    fleet = [2, 3, 3, 4, 5]
+
+    computer = GameBoard()
+    computer_fleet = Fleet(fleet)
+    computer.print_board()
+
+    '''
+    player = GameBoard()
+    player_fleet = Fleet()
+    player_fleet.add_ships(FLEET)
+    player.print_board()
+    '''
 
 
